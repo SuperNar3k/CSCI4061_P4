@@ -1,4 +1,4 @@
-#include <stdio.h>
+    #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/socket.h>
@@ -25,13 +25,43 @@ void createLogFile(void) {
 int main(int argc, char *argv[]) {
 
     // process input arguments
-
+    char *folderName = argv[1];
+    int clients = atoi(argv[2]);
+    char *serverIP = argv[3];
+    char *serverPort = argv[4];
 
     // create log file
     createLogFile();
 
     // spawn client processes
+    // Create a TCP socket.
+    int sockfd = socket(AF_INET , SOCK_STREAM , 0);
 
+    // Specify an address to connect to (we use the local host or 'loop-back' address).
+    struct sockaddr_in address;
+    address.sin_family = AF_INET;
+    address.sin_port = htons(serverPort);
+    address.sin_addr.s_addr = inet_addr("127.0.0.1");
+
+    // Connect it.
+    if (connect(sockfd, (struct sockaddr *) &address, sizeof(address)) == 0) {
+
+        char msgbuf[MAX_MSG_SIZE];
+        char rspbuf[MAX_MSG_SIZE];
+        printf("Enter a message to send: ");
+        scanf("%s", msgbuf);
+
+        write(sockfd, msgbuf, strlen(msgbuf));
+        read(sockfd, rspbuf, MAX_MSG_SIZE);
+        printf("%s\n", rspbuf);
+
+        //close connection
+        close(sockfd);
+
+    } else {
+        perror("Connection failed!");
+    }
+}
 
     // wait for all client processes to terminate
 
