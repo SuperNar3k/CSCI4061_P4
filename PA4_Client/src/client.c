@@ -24,16 +24,16 @@ void createLogFile(void) {
 
 int main(int argc, char *argv[]) {
 
-    // process input arguments
+    // Process input arguments
     char *folderName = argv[1];
     int clients = atoi(argv[2]);
     char *serverIP = argv[3];
     char *serverPort = argv[4];
 
-    // create log file
+    // Create the log file
     createLogFile();
 
-    // spawn client processes
+    // Spawn client processes
     // Create a TCP socket.
     int sockfd = socket(AF_INET , SOCK_STREAM , 0);
 
@@ -63,7 +63,7 @@ int main(int argc, char *argv[]) {
     }
 }
 
-    // wait for all client processes to terminate
+    // TO-DO: Wait for all client processes to terminate
 
 
     // close log file

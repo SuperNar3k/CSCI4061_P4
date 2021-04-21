@@ -16,14 +16,15 @@
 
 int main(int argc, char *argv[]) {
 
-    // process input arguments
+    // Process input arguments
     int serverPort = atoi(argv[1]);
     int sockfd, connfd;
     socklen_t len;
     struct sockaddr_in servaddr;
     pthread_t threads[MAX_NUM_CLIENTS];
     int count = 0;
-    // socket create and verification 
+
+    // Socket create and verification 
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
     if (sockfd == -1) {
         printf("socket creation failed\n");
