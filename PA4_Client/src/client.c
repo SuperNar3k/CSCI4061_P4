@@ -1,16 +1,4 @@
-    #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/socket.h>
-#include <zconf.h>
-#include <arpa/inet.h>
-#include <ctype.h>
-#include <sys/stat.h>
-#include <dirent.h>
-#include <sys/wait.h>
-#include "../include/protocol.h"
-
-FILE *logfp;
+#include "client.h"
 
 void createLogFile(void) {
     pid_t p = fork();
@@ -21,6 +9,7 @@ void createLogFile(void) {
     mkdir("log", ACCESSPERMS);
     logfp = fopen("log/log_client.txt", "w");
 }
+
 
 int main(int argc, char *argv[]) {
 
@@ -34,37 +23,26 @@ int main(int argc, char *argv[]) {
     createLogFile();
 
     // Spawn client processes
-    // Create a TCP socket.
-    int sockfd = socket(AF_INET , SOCK_STREAM , 0);
-
-    // Specify an address to connect to (we use the local host or 'loop-back' address).
-    struct sockaddr_in address;
-    address.sin_family = AF_INET;
-    address.sin_port = htons(serverPort);
-    address.sin_addr.s_addr = inet_addr("127.0.0.1");
-
-    // Connect it.
-    if (connect(sockfd, (struct sockaddr *) &address, sizeof(address)) == 0) {
-
-        char msgbuf[MAX_MSG_SIZE];
-        char rspbuf[MAX_MSG_SIZE];
-        printf("Enter a message to send: ");
-        scanf("%s", msgbuf);
-
-        write(sockfd, msgbuf, strlen(msgbuf));
-        read(sockfd, rspbuf, MAX_MSG_SIZE);
-        printf("%s\n", rspbuf);
-
-        //close connection
-        close(sockfd);
-
-    } else {
-        perror("Connection failed!");
+    for (int i = 0; i < clients; i++){
+        pid_t client = fork();
+        if (client == 0){
+            char clientID = i + '1';
+            execl("communicate", "communicate", &clientID, folderName, serverIP, serverPort, NULL);
+        }
+        else if (client < 0) { // error creating child
+            fprintf(stderr, "ERROR: failed to fork while spawning client processes\n");
+			exit(EXIT_FAILURE);
+		}
     }
-}
 
     // TO-DO: Wait for all client processes to terminate
-
+    for (int i = 0; i < clients; i++){
+		pid_t terminated_pid = wait(NULL);
+		if (terminated_pid == -1){ // error waiting for child
+			fprintf(stderr, "ERROR: failed to wait for client proccess\n");
+			exit(EXIT_FAILURE);
+		}
+	}
 
     // close log file
     fclose(logfp);
