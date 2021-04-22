@@ -10,7 +10,6 @@ void init_request(request_t* request, int requestCode, int clientID){
 }
 
 int main(int argc, char *argv[]){
-  printf("yo\n");
   int clientID = atoi(argv[1]);
   char *folderName = argv[2];
   char *serverIP = argv[3];
@@ -29,8 +28,8 @@ int main(int argc, char *argv[]){
     request_t request;
     response_t response;
     init_request(&request, GET_WSTAT, clientID);
-
     write(sockfd, &request, sizeof(request_t));
+
     read(sockfd, &response, sizeof(response_t));
     //close connection
     close(sockfd);

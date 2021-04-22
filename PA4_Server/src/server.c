@@ -7,12 +7,13 @@ struct clientInfo {
 };
 
 void* requestThread(void* args){
+    printf("hello\n");
     struct clientInfo* info = (struct clientInfo*) args;
     request_t request;
     response_t response;
     read(info->clientFd, &request, sizeof(request_t));
 
-    if(request.flag == GET_WSTAT){      
+    if(request.requestCode == GET_WSTAT){      
         response.requestCode = request.requestCode;
         response.responseCode = 1;
         pthread_mutex_lock(&lock);
