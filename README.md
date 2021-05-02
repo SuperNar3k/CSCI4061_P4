@@ -30,8 +30,8 @@ We made two executables, server and client. For the server program, we used mult
 * Christopher Liu (liux3770)
 
 **Contribution:**
-* Yna Roxas: server.c, client.c
-* Narek Ohanyan: readme.md, documentations, word length calculation
-* Christopher Liu: 
+* Yna Roxas: server.c, client.c, readme.md
+* Narek Ohanyan: readme.md, documentations, word length calculation, custom IP inputting
+* Christopher Liu: server.c, client.c, histogram, testing
   
 We tried our best to divide and conquer this project equally, giving each other more work if needed to make our contributions equal and fair to each other.
