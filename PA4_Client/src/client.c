@@ -168,8 +168,11 @@ int client(int clientID, char* folderName, char* serverIP, int serverPort){
 
   if((fp = fopen(fileName, "r")) != NULL){
     update(&address, fp, clientID);
+    fprintf(logfp, "[%d] UPDATE_WSTAT: %d\n", clientID, 1);
   }
-  fprintf(logfp, "[%d] UPDATE_WSTAT: %d", 1);
+  else {
+    fprintf(logfp, "[%d] UPDATE_WSTAT: %d\n", clientID, 0);
+  }
   get_my_updates(&address, clientID);
   get_all_updates(&address, clientID);
   get_wstat(&address, clientID);
