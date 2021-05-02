@@ -25,7 +25,7 @@ void process(FILE* fp, request_t* request){
   int wordLen;
   char word[chunkSize];
 
-  //reads lines until end of file or error
+  // Reads lines until end of file or error
   while (fscanf(fp, "%s", word) != EOF){
     wordLen = strlen(word);
     request->data[wordLen - 1]++ ;
@@ -159,7 +159,11 @@ int client(int clientID, char* folderName, char* serverIP, int serverPort){
   struct sockaddr_in address;
   address.sin_family = AF_INET;
   address.sin_port = htons(serverPort);
-  address.sin_addr.s_addr = inet_addr("127.0.0.1");
+  if(serverIP == NULL) {
+    address.sin_addr.s_addr = inet_addr("127.0.0.1");
+  } else {
+    address.sin_addr.s_addr = inet_addr(serverIP);
+  }
 
   char fileName[maxFileNameLength];
   sprintf(fileName, "%s/%d.txt", folderName, clientID);
@@ -202,16 +206,16 @@ int main(int argc, char *argv[]) {
 		}
     }
 
-    // TO-DO: Wait for all client processes to terminate
+    // Wait for all client processes to terminate
     for (int i = 0; i < clients; i++){
 		pid_t terminated_pid = wait(NULL);
-		if (terminated_pid == -1){ // error waiting for child
+		if (terminated_pid == -1){ // Error waiting for child
 			fprintf(stderr, "ERROR: failed to wait for client proccess\n");
 			exit(EXIT_FAILURE);
 		}
 	}
 
-    // close log file
+    // Close the log file
     fclose(logfp);
 
     return EXIT_SUCCESS;

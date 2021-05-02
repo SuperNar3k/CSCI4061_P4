@@ -18,7 +18,7 @@ void* requestThread(void* args){
         response.responseCode = RSP_OK;
         pthread_mutex_lock(&lock);
         clientStatus[clientID - 1]++;
-        for (int i = 0; i < WORD_LENGTH_RANGE; i++){ // writes data to the result histogram
+        for (int i = 0; i < WORD_LENGTH_RANGE; i++){ // Writes data to the result histogram
             resultHistogram[i] += request.data[i];
         }
         pthread_mutex_unlock(&lock);
@@ -27,7 +27,7 @@ void* requestThread(void* args){
     else if(request.requestCode == GET_MY_UPDATES){
         response.responseCode = RSP_OK;
         pthread_mutex_lock(&lock);
-        response.data[0] = clientStatus[clientID - 1]; // records the number of updates the client gave to the response data structure
+        response.data[0] = clientStatus[clientID - 1]; // Records the number of updates the client gave to the response data structure
         pthread_mutex_unlock(&lock);
         printf("[%d] GET_MY_UPDATES\n", clientID);
     }
@@ -35,7 +35,7 @@ void* requestThread(void* args){
         response.responseCode = RSP_OK;
         pthread_mutex_lock(&lock);
         int totalRequests = 0;
-        for(int i = 0; i < MAX_NUM_CLIENTS; i++){ // sums the number of updates from clients
+        for(int i = 0; i < MAX_NUM_CLIENTS; i++){ // Sums the number of updates from clients
             totalRequests += clientStatus[i];
         }
         response.data[0] = totalRequests;
@@ -45,7 +45,7 @@ void* requestThread(void* args){
     else if(request.requestCode == GET_WSTAT){      
         response.responseCode = RSP_OK;
         pthread_mutex_lock(&lock);
-        for (int i = 0; i < WORD_LENGTH_RANGE; i++){ // writes the current result histogram data to the response data struture
+        for (int i = 0; i < WORD_LENGTH_RANGE; i++){ // Writes the current result histogram data to the response data struture
             response.data[i] = resultHistogram[i];
         }
         pthread_mutex_unlock(&lock);
@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
     }
     memset(&servaddr, 0, sizeof(servaddr));
 
-    // assign IP, PORT
+    // Assign IP, PORT
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     servaddr.sin_port = htons(serverPort);
@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
         struct sockaddr_in clientAddress;
         len = sizeof(clientAddress);
 
-        // Accept (write your code by replacing ...)
+        // Accept
         connfd = accept(sockfd, (struct sockaddr*) &clientAddress, (void *) &len);
         if (connfd < 0) {
             printf("server accept failed\n");
