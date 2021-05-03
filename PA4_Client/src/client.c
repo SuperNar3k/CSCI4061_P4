@@ -1,5 +1,4 @@
 #include "client.h"
-
 void createLogFile(void) {
     pid_t p = fork();
     if (p == 0)
