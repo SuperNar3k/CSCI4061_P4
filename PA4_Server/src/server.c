@@ -1,5 +1,4 @@
 #include "../include/server.h"
-
 struct clientInfo {
     int clientFd;
     char *clientIP;
