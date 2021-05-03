@@ -8,16 +8,15 @@ This project extends the word length statistics application covered in our previ
 **How to compile:**
 Open two terminals, one to run client and one to run server.    
 
-These are some examples of how to run client.
-You can play with these executables with various arguments to check the expected output and logs.
-`chmod +x client_main client_extracredit client_error`
-`./client_main Testcases/TC3 1 127.0.0.1 9876`
-`./client_extracredit Testcases/TC3 1 127.0.0.1 9876`
-`./client_error Testcases/TC3 1 127.0.0.1 9876`
+In order to run the client, be in the PA4_Client directory and execute:
+`make`
+`./client <foldername> <#ofclients> <serverIP> <serverPort>`
+
+
  
-In order to run server, execute this:
-`chmod +x server_main`
-`./server_main 9876`
+In order to run server, be in the PA4_Server directory and execute:
+`make`
+`./server <serverPort>`
 
 **What this does:**
 We made two executables, server and client. For the server program, we used multithreading to implement a multi-threaded server. For the client program, we generate multiple client processes. Each client process reads a file, processes the word length statistics and sends a message to the server through TCP connections. The server spawns a thread whenever it establishes a new TCP connection with a client. The statistics sent by clients are accumulated in a shared resource named "Result Histogram". We reused our codes for computing word length statistics from PA3, since the definition of a word for this assignment is the same. Space and newline character are the only delimiters.
