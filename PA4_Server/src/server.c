@@ -6,24 +6,57 @@ struct clientInfo {
 };
 
 void* requestThread(void* args){
-    printf("hello\n");
     struct clientInfo* info = (struct clientInfo*) args;
     request_t request;
     response_t response;
     read(info->clientFd, &request, sizeof(request_t));
+    response.requestCode = request.requestCode;
 
-    if(request.requestCode == GET_WSTAT){      
-        response.requestCode = request.requestCode;
-        response.responseCode = 1;
+    int clientID = request.clientID;
+    if(request.requestCode == UPDATE_WSTAT){
+        response.responseCode = RSP_OK;
         pthread_mutex_lock(&lock);
-        for (int i = 0; i < WORD_LENGTH_RANGE; i++){
+        clientStatus[clientID - 1]++;
+        for (int i = 0; i < WORD_LENGTH_RANGE; i++){ // Writes data to the result histogram
+            resultHistogram[i] += request.data[i];
+        }
+        pthread_mutex_unlock(&lock);
+        printf("[%d] UPDATE_WSTAT\n", clientID);
+    }
+    else if(request.requestCode == GET_MY_UPDATES){
+        response.responseCode = RSP_OK;
+        pthread_mutex_lock(&lock);
+        response.data[0] = clientStatus[clientID - 1]; // Records the number of updates the client gave to the response data structure
+        pthread_mutex_unlock(&lock);
+        printf("[%d] GET_MY_UPDATES\n", clientID);
+    }
+    else if(request.requestCode == GET_ALL_UPDATES){
+        response.responseCode = RSP_OK;
+        pthread_mutex_lock(&lock);
+        int totalRequests = 0;
+        for(int i = 0; i < MAX_NUM_CLIENTS; i++){ // Sums the number of updates from clients
+            totalRequests += clientStatus[i];
+        }
+        response.data[0] = totalRequests;
+        pthread_mutex_unlock(&lock);
+        printf("[%d] GET_ALL_UPDATES\n", clientID);
+    }
+    else if(request.requestCode == GET_WSTAT){      
+        response.responseCode = RSP_OK;
+        pthread_mutex_lock(&lock);
+        for (int i = 0; i < WORD_LENGTH_RANGE; i++){ // Writes the current result histogram data to the response data struture
             response.data[i] = resultHistogram[i];
         }
         pthread_mutex_unlock(&lock);
-        printf("[%d] GET_WSTAT\n", request.clientID);
+        printf("[%d] GET_WSTAT\n", clientID);
+    }
+    else{
+        response.responseCode = RSP_NOK;
     }
 
     write(info->clientFd, &response, sizeof(response_t));
+    printf("close connection from %s:%d\n", info->clientIP, info->clientPort);
+    close(info->clientFd);
     return NULL;
 }
 
@@ -48,7 +81,7 @@ int main(int argc, char *argv[]) {
     }
     memset(&servaddr, 0, sizeof(servaddr));
 
-    // assign IP, PORT
+    // Assign IP, PORT
     servaddr.sin_family = AF_INET;
     servaddr.sin_addr.s_addr = htonl(INADDR_ANY);
     servaddr.sin_port = htons(serverPort);
@@ -73,7 +106,7 @@ int main(int argc, char *argv[]) {
         struct sockaddr_in clientAddress;
         len = sizeof(clientAddress);
 
-        // Accept (write your code by replacing ...)
+        // Accept
         connfd = accept(sockfd, (struct sockaddr*) &clientAddress, (void *) &len);
         if (connfd < 0) {
             printf("server accept failed\n");

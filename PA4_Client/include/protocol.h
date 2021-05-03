@@ -6,6 +6,10 @@
 #define RESPONSE_MSG_SIZE           3
 #define LONG_RESPONSE_MSG_SIZE      22
 #define MAX_NUM_CLIENTS             20
+#define MAX_LOG_MSG                 128
+#define maxFileNameLength           200
+#define chunkSize                   1024
+#define dataSize                    20
 
 //Request Structure Starting Index
 #define RQS_RQS_CODE_NUM            0

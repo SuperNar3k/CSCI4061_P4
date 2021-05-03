@@ -1,3 +1,6 @@
+#ifndef CLIENT_H
+#define CLIENT_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -25,3 +28,4 @@ typedef struct response{
   int data[20];
 }response_t;
 
+#endif //CLIENT_H

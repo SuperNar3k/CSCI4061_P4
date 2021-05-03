@@ -1,3 +1,6 @@
+#ifndef SERVER_H
+#define SERVER_H
+
 #include <stdio.h>
 #include <netdb.h>
 #include <netinet/in.h>
@@ -12,7 +15,8 @@
 #include <sys/wait.h>
 #include "../include/protocol.h"
 
-int resultHistogram[20];
+int resultHistogram[WORD_LENGTH_RANGE];
+int clientStatus[MAX_NUM_CLIENTS];
 pthread_mutex_t lock;
 
 typedef struct request{
@@ -27,3 +31,5 @@ typedef struct response{
   int responseCode;
   int data[20];
 }response_t;
+
+#endif //SERVER_H
