@@ -5,8 +5,19 @@
 **Purpose:** 
 This project extends the word length statistics application covered in our previous projects. There is one server and multiple clients. Mappers are implemented as client processes, and reducers as a single server process. Clients (mappers) read files, compute word length statistics for the files, and send the data to the server. The server (reducer) accumulates the word length statistics sent by clients. The server and clients communicate via sockets-based TCP connections, rather than files or pipes.
 
-**How to compile:**  
+**How to compile:**
+Open two terminals, one to run client and one to run server.    
 
+These are some examples of how to run client.
+You can play with these executables with various arguments to check the expected output and logs.
+`chmod +x client_main client_extracredit client_error`
+`./client_main Testcases/TC3 1 127.0.0.1 9876`
+`./client_extracredit Testcases/TC3 1 127.0.0.1 9876`
+`./client_error Testcases/TC3 1 127.0.0.1 9876`
+ 
+In order to run server, execute this:
+`chmod +x server_main`
+`./server_main 9876`
 
 **What this does:**
 We made two executables, server and client. For the server program, we used multithreading to implement a multi-threaded server. For the client program, we generate multiple client processes. Each client process reads a file, processes the word length statistics and sends a message to the server through TCP connections. The server spawns a thread whenever it establishes a new TCP connection with a client. The statistics sent by clients are accumulated in a shared resource named "Result Histogram". We reused our codes for computing word length statistics from PA3, since the definition of a word for this assignment is the same. Space and newline character are the only delimiters.
