@@ -183,6 +183,11 @@ int client(int clientID, char* folderName, char* serverIP, int serverPort){
 }
 
 int main(int argc, char *argv[]) {
+    // Check for an server port argument
+    if(argc < 5){
+        printf("usage: %s <inputFolder> <#ofClients> <serverIP> <serverPort>\n",argv[0]);
+        exit(EXIT_FAILURE);
+    }
 
     // Process input arguments
     char *folderName = argv[1];
@@ -190,6 +195,11 @@ int main(int argc, char *argv[]) {
     char *serverIP = argv[3];
     char *serverPort = argv[4];
     int portNumber = atoi(serverPort);
+
+    if(clients > 20){
+        printf("Maximum number of clients is 20");
+        exit(EXIT_FAILURE);
+    }
 
     // Create the log file
     createLogFile();

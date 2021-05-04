@@ -62,6 +62,12 @@ void* requestThread(void* args){
 
 int main(int argc, char *argv[]) {
 
+    // Check for an server port argument
+    if(argc < 2){
+        printf("usage: %s <serverPort>\n",argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
     // Process input arguments
     int serverPort = atoi(argv[1]);
     int sockfd, connfd;
@@ -69,6 +75,8 @@ int main(int argc, char *argv[]) {
     struct sockaddr_in servaddr;
     pthread_t threads[MAX_NUM_CLIENTS];
     int count = 0;
+
+    
 
     // Initialize resultHistogram lock
     pthread_mutex_init(&lock, NULL);
